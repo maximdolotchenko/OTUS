@@ -1,4 +1,4 @@
-package com.otus.cinfig;
+package com.otus.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

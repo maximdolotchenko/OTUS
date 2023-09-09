@@ -3,29 +3,49 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.otus</groupId>
-        <artifactId>otus_demo</artifactId>
+        <artifactId>otus-demo</artifactId>
         <version>${revision}</version>
     </parent>
 
     <artifactId>service</artifactId>
     <packaging>jar</packaging>
 
-    <!--    <name>service</name>-->
-    <!--    <url>http://maven.apache.org</url>-->
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.otus</groupId>
             <artifactId>api</artifactId>
-            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>otus-demo-file</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <layout>JAR</layout>
+                            <classifier>spring-boot</classifier>
+                            <mainClass>com.otus.App</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

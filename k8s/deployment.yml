@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kuber-deployment
+  labels:
+    app: kuber-deployment
+spec:
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      name: kuber-deployment_(template_metadata_name)
+      labels:
+        env: dev-label-name
+    spec:
+      containers:
+        - name: response-ok
+          image: maximchik40/response-ok-myapp
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      env: dev-label-name

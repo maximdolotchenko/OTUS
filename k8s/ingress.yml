@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: appingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          #          - path: /health
+          #            pathType: Prefix
+          #            backend:
+          #              service:
+          #                name: kuber-service
+          #                port:
+          #                  number: 80
+          - path: /(otusapp/[a-z]*)(/health)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: kuber-service
+                port:
+                  number: 80

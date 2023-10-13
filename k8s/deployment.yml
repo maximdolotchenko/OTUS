@@ -18,10 +18,26 @@ spec:
     spec:
       containers:
         - name: response-ok
-          image: maximchik40/response-ok-myapp
+          image: maximchik40/response-ok-and-db1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: kuber-secret
+                  key: dbuser
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kuber-secret
+                  key: dbpass
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: kuber-configmap
+                  key: dburl
       restartPolicy: Always
   selector:
     matchLabels:

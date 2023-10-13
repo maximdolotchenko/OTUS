@@ -23,3 +23,17 @@ spec:
                 name: kuber-service
                 port:
                   number: 80
+          - path: /(user$)
+            pathType: Exact
+            backend:
+              service:
+                name: kuber-service
+                port:
+                  number: 80
+          - path: /(user/[0-9]*$)
+            pathType: Exact
+            backend:
+              service:
+                name: kuber-service
+                port:
+                  number: 80

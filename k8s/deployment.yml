@@ -23,21 +23,21 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: kuber-secret
-                  key: dbuser
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: kuber-secret
-                  key: dbpass
-            - name: DB_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: kuber-configmap
-                  key: dburl
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: kuber-secret
+                key: dbuser
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: kuber-secret
+                key: dbpass
+          - name: DB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: kuber-configmap
+                key: dburl
       restartPolicy: Always
   selector:
     matchLabels:

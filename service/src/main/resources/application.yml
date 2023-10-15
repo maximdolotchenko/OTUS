@@ -1,7 +1,9 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
   datasource:
 #    jdbc:postgresql://localhost:5432/postgres
     url: ${DB_URL}

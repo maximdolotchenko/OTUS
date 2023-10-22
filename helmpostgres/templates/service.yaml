@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+  labels:
+    env: {{.Values.postgresql.label}}
+spec:
+  ports:
+    - port: {{.Values.postgresql.port}}
+      targetPort: {{.Values.postgresql.port}}
+      protocol: TCP
+  clusterIP: None
+  selector:
+    env: {{.Values.postgresql.label}}

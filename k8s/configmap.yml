@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: kuber-configmap
 data:
-  dburl: jdbc:postgresql://arch.homework:5432/postgres
+  dburl: db-service.default.svc.cluster.local

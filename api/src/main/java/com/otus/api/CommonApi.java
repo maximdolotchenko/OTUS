@@ -32,4 +32,7 @@ public interface CommonApi {
 
     @PutMapping(value = "/user/{userId}")
     ResponseEntity<UserDto> updateUser(@PathVariable Long userId, @RequestBody UserDto userDto);
+
+    @GetMapping(value = "/internal-error")
+    ResponseEntity<Void> return500();
 }

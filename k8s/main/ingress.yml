@@ -4,6 +4,9 @@ metadata:
   name: appingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9113"
+    prometheus.io/scheme: http
 spec:
   ingressClassName: nginx
   rules:
@@ -31,6 +34,20 @@ spec:
                 port:
                   number: 80
           - path: /(user/[0-9]*$)
+            pathType: Exact
+            backend:
+              service:
+                name: kuber-service
+                port:
+                  number: 80
+          - path: /(actuator/prometheus$)
+            pathType: Exact
+            backend:
+              service:
+                name: kuber-service
+                port:
+                  number: 80
+          - path: /(internal-error)
             pathType: Exact
             backend:
               service:

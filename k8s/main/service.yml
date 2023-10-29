@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kuber-service
+  labels:
+    app: kuber-service
 spec:
   selector:
     env: dev-label-name
@@ -9,4 +11,5 @@ spec:
     - port: 80
       targetPort: 8080
       protocol: TCP
+      name: metrics
   type: NodePort

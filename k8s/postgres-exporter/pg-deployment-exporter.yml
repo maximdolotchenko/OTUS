@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kuber-deployment-exporter
+  labels:
+    app: kuber-deployment-exporter
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: post-exp-dep-name
+      labels:
+        env: postgres-exporter-deployment
+    spec:
+      containers:
+        - name: exporter
+          image: "quay.io/prometheuscommunity/postgres-exporter:v0.14.0"
+          args: [ "--collector.stat_statements" ]
+          env:
+            - name: DATA_SOURCE_URI
+              value: localhost:5432/postgres?sslmode=disable
+            - name: DATA_SOURCE_USER
+              value: postgres
+            - name: DATA_SOURCE_PASS
+              value: postgres
+          ports:
+            - containerPort: 9187
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      env: postgres-exporter-deployment

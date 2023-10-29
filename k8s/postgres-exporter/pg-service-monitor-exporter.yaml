@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations:
+    meta.helm.sh/release-name: postgres-exporter
+    meta.helm.sh/release-namespace: default
+  labels:
+    app: prometheus-postgres-exporter-service-monitor
+    app.kubernetes.io/managed-by: Helm
+    chart: prometheus-postgres-exporter-1.1.0
+    heritage: Helm
+#    release: stack
+  name: prometheus-postgres-exporter-service-monitor
+#  namespace: monitor
+spec:
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: promet
+      scrapeTimeout: 30s
+      path: /metrics
+  selector:
+    matchLabels:
+      app: db-service-exporter
+#      release: postgres-exporter

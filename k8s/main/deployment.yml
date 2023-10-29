@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: response-ok
-          image: maximchik40/service-lab4:v3
+          image: maximchik40/service-lab4:v4
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

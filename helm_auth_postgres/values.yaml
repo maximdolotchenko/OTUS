@@ -1,0 +1,35 @@
+# Default values for postgresHelm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: postgres
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "13.3"
+postgresql:
+  username: postgres
+  password: postgres
+  database: postgres
+  port: 5432
+  label: authpostgresLabel
+  
+volumeClaim:
+  size: 150Mi
+  accessMode: "ReadWriteMany"
+
+ingress:
+  enabled: false
+service:
+  type: 111
+  
+
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80

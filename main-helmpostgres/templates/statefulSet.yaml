@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statefulset
+  labels:
+    app: statefulset
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      env: postgresLabel
+  template:
+    metadata:
+      name: postgresM
+      labels:
+        env: postgresLabel
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag}}"
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/bash", "-c", "sleep 10 && PGPASSWORD=$POSTGRES_PASSWORD psql $POSTGRES_DB -U $POSTGRES_USER -c \"CREATE TABLE IF NOT EXISTS users (id BIGSERIAL PRIMARY KEY, first_name VARCHAR(200) NOT NULL, last_name VARCHAR(200) NOT NULL, email VARCHAR(254) NOT NULL);CREATE TABLE IF NOT EXISTS user_info ( id BIGSERIAL PRIMARY KEY, avatar_uri VARCHAR(254) NOT NULL, age VARCHAR(254) NOT NULL ); INSERT INTO user_info(id, avatar_uri, age ) VALUES (1, 'PETROV_uri_avatar', '22'), (2, 'uri_avatar2', '22'), (3, 'uri_avatar3', '33'), (4, 'uri_avatar4', '44'),(5, 'uri_avatar5', '45'),(6, 'uri_avatar6', '50'), (7, 'uri_avatar7', '70'), (8, 'uri_avatar8', '14'), (9, 'uri_avatar9', '22'), (10, 'uri_avatar10', '12'), (11, 'uri_avatar11', '32'), (12, 'uri_avatar12', '35'), (13, 'uri_avatar13', '36'), (14, 'uri_avatar14', '37') ON CONFLICT DO NOTHING;\""]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.postgresql.port }}
+          volumeMounts:
+            - name: volume
+              mountPath: /cache
+          env:
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.postgresql.password | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.postgresql.username | quote }}
+            - name: POSTGRES_DB
+              value: {{ .Values.postgresql.database | quote }}
+  volumeClaimTemplates:
+    - metadata:
+        name: volume
+      spec:
+        accessModes: [ "{{.Values.volumeClaim.accessMode}}" ]
+        storageClassName: ""
+        resources:
+          requests:
+            storage: {{ .Values.volumeClaim.size}}
+

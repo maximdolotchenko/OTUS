@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: authingress
+  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9113"
+    prometheus.io/scheme: http
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+        - path: /register
+          pathType: Exact
+          backend:
+            service:
+              name: auth-kuber-service
+              port:
+                number: 80
+        - path: /login
+          pathType: Prefix
+          backend:
+            service:
+              name: auth-kuber-service
+              port:
+                number: 80
+        - path: /logout
+          pathType: Prefix
+          backend:
+            service:
+              name: auth-kuber-service
+              port:
+                number: 80
+        - path: /auth
+          pathType: Prefix
+          backend:
+            service:
+              name: auth-kuber-service
+              port:
+                number: 80
+        - path: /signin
+          pathType: Prefix
+          backend:
+            service:
+              name: auth-kuber-service
+              port:
+                number: 80
+

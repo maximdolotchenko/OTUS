@@ -18,5 +18,5 @@ spec:
       - default
   selector:
     matchLabels:
-      app: kuber-service
+      app: main-app-service
   

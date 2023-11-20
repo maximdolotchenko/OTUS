@@ -7,50 +7,61 @@ metadata:
     prometheus.io/scrape: "true"
     prometheus.io/port: "9113"
     prometheus.io/scheme: http
+    nginx.ingress.kubernetes.io/auth-url: "http://auth-kuber-service.default.svc.cluster.local/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "http://$host/signin"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-User,X-Email,X-User-Id,X-First-Name,X-Last-Name"
 spec:
   ingressClassName: nginx
   rules:
-    - http:
-        paths:
-          - path: /(health$)
-            pathType: Exact
-            backend:
-              service:
-                name: kuber-service
-                port:
-                  number: 80
-          - path: /otusapp/[a-z]*(/health)
-            pathType: Prefix
-            backend:
-              service:
-                name: kuber-service
-                port:
-                  number: 80
-          - path: /(user$)
-            pathType: Exact
-            backend:
-              service:
-                name: kuber-service
-                port:
-                  number: 80
-          - path: /(user/[0-9]*$)
-            pathType: Exact
-            backend:
-              service:
-                name: kuber-service
-                port:
-                  number: 80
-          - path: /(actuator/prometheus$)
-            pathType: Exact
-            backend:
-              service:
-                name: kuber-service
-                port:
-                  number: 80
-          - path: /(internal-error)
-            pathType: Exact
-            backend:
-              service:
-                name: kuber-service
-                port:
-                  number: 80
+  - host: arch.homework
+    http:
+      paths:
+        - path: /(health$)
+          pathType: Exact
+          backend:
+            service:
+              name: main-app-service
+              port:
+                number: 80
+        - path: /otusapp/[a-z]*(/health)
+          pathType: Prefix
+          backend:
+            service:
+              name: main-app-service
+              port:
+                number: 80
+        - path: /(user$)
+          pathType: Exact
+          backend:
+            service:
+              name: main-app-service
+              port:
+                number: 80
+        - path: /(user/[0-9]*$)
+          pathType: Exact
+          backend:
+            service:
+              name: main-app-service
+              port:
+                number: 80
+        - path: /(actuator/prometheus$)
+          pathType: Exact
+          backend:
+            service:
+              name: main-app-service
+              port:
+                number: 80
+        - path: /(internal-error)
+          pathType: Exact
+          backend:
+            service:
+              name: main-app-service
+              port:
+                number: 80
+        - path: /(users/me$)
+          pathType: Exact
+          backend:
+            service:
+              name: main-app-service
+              port:
+                number: 80

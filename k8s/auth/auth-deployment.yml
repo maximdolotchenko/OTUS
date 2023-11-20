@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kuber-deployment
+  name: auth-deployment
   labels:
-    app: kuber-deployment
+    app: auth-deployment
 spec:
   replicas: 1
   strategy:
@@ -12,13 +12,13 @@ spec:
       maxUnavailable: 1
   template:
     metadata:
-      name: kuber-deployment_(template_metadata_name)
+      name: auth-deployment
       labels:
-        env: dev-label-name
+        env: auth-label-name
     spec:
       containers:
-        - name: response-ok
-          image: maximchik40/service-lab5:v5
+        - name: auth-image
+          image: maximchik40/auth-service-lab5:v10
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -26,19 +26,19 @@ spec:
           - name: DB_USER
             valueFrom:
               secretKeyRef:
-                name: kuber-secret
+                name: auth-kuber-secret
                 key: dbuser
           - name: DB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: kuber-secret
+                name: auth-kuber-secret
                 key: dbpass
           - name: DB_URL
             valueFrom:
               configMapKeyRef:
-                name: kuber-configmap
+                name: auth-kuber-configmap
                 key: dburl
       restartPolicy: Always
   selector:
     matchLabels:
-      env: dev-label-name
+      env: auth-label-name

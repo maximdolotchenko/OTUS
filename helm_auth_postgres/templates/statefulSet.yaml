@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: statefulset
+  name: authstatefulset
   labels:
-    app: statefulset
+    app: authstatefulset
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      env: postgresLabel
+      env: authpostgresLabel
   template:
     metadata:
       name: postgresM
       labels:
-        env: postgresLabel
+        env: authpostgresLabel
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -27,13 +27,13 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/bash", "-c", "sleep 10 && PGPASSWORD=$POSTGRES_PASSWORD psql $POSTGRES_DB -U $POSTGRES_USER -c \'CREATE TABLE IF NOT EXISTS users (id BIGSERIAL PRIMARY KEY, first_name VARCHAR(200) NOT NULL, last_name  VARCHAR(200) NOT NULL, email VARCHAR(254) NOT NULL);\'"]
+                command: ["/bin/bash", "-c", "sleep 10 && PGPASSWORD=$POSTGRES_PASSWORD psql $POSTGRES_DB -U $POSTGRES_USER -c \'CREATE TABLE IF NOT EXISTS users (id BIGSERIAL PRIMARY KEY, first_name VARCHAR(200) NOT NULL, last_name  VARCHAR(200) NOT NULL, email VARCHAR(254) NOT NULL, login VARCHAR(254) NOT NULL, password VARCHAR(254) NOT NULL);\'"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.postgresql.port }}
           volumeMounts:
             - name: volume
-              mountPath: /cache
+              mountPath: /cache/auth
           env:
             - name: POSTGRES_PASSWORD
               value: {{ .Values.postgresql.password | quote }}

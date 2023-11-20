@@ -2,9 +2,12 @@ package com.otus.service.impl;
 
 import com.otus.dto.UserDto;
 import com.otus.entities.UserEntity;
+import com.otus.entities.UserInfoEntity;
+import com.otus.service.UserInfoRepository;
 import com.otus.service.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -15,6 +18,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserServiceImpl {
     private final UserRepository userRepository;
+    private final UserInfoRepository userInfoRepository;
 
     public void createUser(UserDto userDto) {
 
@@ -55,5 +59,24 @@ public class UserServiceImpl {
                 .lastName(updatedEntity.getLastName())
                 .email(updatedEntity.getEmail())
                 .build();
+    }
+
+    public UserInfoEntity getinfoAboutMe(Long userId) {
+        return userInfoRepository.findById(userId).orElse(null);
+    }
+
+    @Transactional
+    public void changeInfoAboutMe(Long id, String age, String avatarUri) {
+        var userData = userInfoRepository.findById(id);
+        if (userData.isPresent()) {
+            userInfoRepository.updateMe(avatarUri, age, id);
+        } else {
+            userInfoRepository.save(UserInfoEntity.builder()
+                    .id(id)
+                    .age(age)
+                    .avatarUri(avatarUri)
+                    .build());
+        }
+
     }
 }

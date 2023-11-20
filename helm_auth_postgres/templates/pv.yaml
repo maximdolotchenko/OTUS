@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: auth-kuber-pv
+spec:
+  accessModes:
+    - {{ .Values.volumeClaim.accessMode}}
+  capacity:
+    storage: {{ .Values.volumeClaim.size}}
+  hostPath:
+    path: /data/authrepo/

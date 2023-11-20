@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: main-app-service
+  name: auth-kuber-service
   labels:
-    app: main-app-service
+    app: auth-kuber-service
 spec:
   selector:
-    env: dev-label-name
+    env: auth-label-name
   ports:
     - port: 80
       targetPort: 8080

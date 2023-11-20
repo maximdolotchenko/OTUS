@@ -1,8 +1,10 @@
 package com.otus.controller;
 
+import com.otus.CantUpdateDataException;
 import com.otus.api.CommonApi;
 import com.otus.dto.AppStatusOk;
 import com.otus.dto.UserDto;
+import com.otus.dto.UserInfoDto;
 import com.otus.service.impl.UserServiceImpl;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
@@ -12,8 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
+
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 /**
  * @author MDolotchenko
@@ -80,5 +85,41 @@ public class Controller implements CommonApi {
             log.warn("InterruptedException was thrown");
         }
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<UserInfoDto> me(String userId, String login, String email, String firstName, String lastName) {
+        if (userId == null) {
+            return ResponseEntity.status(UNAUTHORIZED).build();
+        }
+        var infoAboutMe = userService.getinfoAboutMe(Long.valueOf(userId));
+        UserInfoDto.UserInfoDtoBuilder loginInfoBuilder = UserInfoDto.builder()
+                .userId(userId)
+                .firstName(firstName)
+                .email(email)
+                .lastName(lastName)
+                .login(login);
+        if (infoAboutMe == null) {
+            log.info("Users with id "+ userId +"not found");
+            return ResponseEntity.ok(loginInfoBuilder.build());
+        }
+        return ResponseEntity.ok(loginInfoBuilder
+                .age(infoAboutMe.getAge())
+                .avatarUri(infoAboutMe.getAvatarUri())
+                .build());
+    }
+
+    @Override
+    public ResponseEntity<UserInfoDto> updateMe(String userId, String login, String email, String firstName, String lastName, UserInfoDto userInfoDto) {
+        if(Objects.equals(userId, userInfoDto.getUserId())) {
+            userService.changeInfoAboutMe(Long.valueOf(userId), userInfoDto.getAge(), userInfoDto.getAvatarUri());
+            return ResponseEntity.ok(UserInfoDto.builder()
+                    .userId(userId)
+                    .avatarUri(userInfoDto.getAvatarUri())
+                    .age(userInfoDto.getAge())
+                    .build());
+        } else {
+            throw new CantUpdateDataException(userId, userInfoDto.getUserId());
+        }
     }
 }
